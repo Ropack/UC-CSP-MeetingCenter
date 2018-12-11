@@ -8,5 +8,10 @@ namespace UC.CSP.MeetingCenter.DAL
     {
         List<Center> Centers { get; }
         List<Room> Rooms { get; }
+        List<Reservation> Reservations { get; }
+
+        bool Changed { get; }
+        void TrackChanges();
+        void NoteChange();
     }
 }

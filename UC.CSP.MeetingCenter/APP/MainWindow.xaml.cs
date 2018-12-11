@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
+using System;
 using System.Windows;
 using UC.CSP.MeetingCenter.BL.Facades;
 using UC.CSP.MeetingCenter.DAL.Entities;
 
-namespace UC.CSP.MeetingCenter
+namespace UC.CSP.MeetingCenter.APP
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -13,12 +13,14 @@ namespace UC.CSP.MeetingCenter
     {
         private CenterFacade CenterFacade { get; }
         private RoomFacade RoomFacade { get; }
+        private ReservationFacade ReservationFacade { get; }
         private ApplicationFacade ApplicationFacade { get; }
         public MainWindow()
         {
             InitializeComponent();
             CenterFacade = new CenterFacade();
             RoomFacade = new RoomFacade();
+            ReservationFacade = new ReservationFacade();
             ApplicationFacade = new ApplicationFacade();
         }
 
@@ -27,15 +29,11 @@ namespace UC.CSP.MeetingCenter
         {
             if (CentersListBox.SelectedItem is Center selectedCenter)
             {
-                var form = new CenterForm();
-                if (form.ShowDialog().Value)
+                var form = new CenterForm(FormMode.New);
+                if (form.ShowDialog() ?? false)
                 {
-                    CenterFacade.Create(new Center()
-                    {
-                        Name = form.NameTextBox.Text,
-                        Code = form.CodeTextBox.Text,
-                        Description = form.DescriptionTextBox.Text
-                    });
+                    var center = form.RetrieveFormData();
+                    CenterFacade.Create(center);
                     CentersListBox.Items.Refresh();
                 }
             }
@@ -45,16 +43,10 @@ namespace UC.CSP.MeetingCenter
         {
             if (CentersListBox.SelectedItem is Center selectedCenter)
             {
-                var form = new CenterForm();
-                form.NameTextBox.Text = selectedCenter.Name;
-                form.CodeTextBox.Text = selectedCenter.Code;
-                form.DescriptionTextBox.Text = selectedCenter.Description;
-                if (form.ShowDialog().Value)
+                var form = new CenterForm(FormMode.Edit, selectedCenter);
+                if (form.ShowDialog() ?? false)
                 {
-                    var center = selectedCenter;
-                    center.Name = form.NameTextBox.Text;
-                    center.Code = form.CodeTextBox.Text;
-                    center.Description = form.DescriptionTextBox.Text;
+                    var center = form.RetrieveFormData();
                     CenterFacade.Update(center);
                     CentersListBox.Items.Refresh();
                 }
@@ -76,17 +68,11 @@ namespace UC.CSP.MeetingCenter
 
         private void NewRoomButton_Click(object sender, RoutedEventArgs e)
         {
-            var form = new RoomForm();
-            if (form.ShowDialog().Value)
+            var form = new RoomForm(FormMode.New);
+            if (form.ShowDialog() ?? false)
             {
-                RoomFacade.Create(new Room()
-                {
-                    Name = form.NameTextBox.Text,
-                    Code = form.CodeTextBox.Text,
-                    Description = form.DescriptionTextBox.Text,
-                    Capacity = Convert.ToInt32(form.CapacityTextBox.Text)
-                    // TODO: validate user input
-                });
+                var room = form.RetrieveFormData();
+                RoomFacade.Create(room);
                 RoomsListBox.Items.Refresh();
             }
         }
@@ -95,19 +81,11 @@ namespace UC.CSP.MeetingCenter
         {
             if (RoomsListBox.SelectedItem is Room selectedRoom)
             {
-                var form = new RoomForm();
-                form.NameTextBox.Text = selectedRoom.Name;
-                form.CodeTextBox.Text = selectedRoom.Code;
-                form.DescriptionTextBox.Text = selectedRoom.Description;
-                form.CapacityTextBox.Text = selectedRoom.Capacity.ToString();
-                if (form.ShowDialog().Value)
+                var form = new RoomForm(FormMode.Edit, selectedRoom);
+                if (form.ShowDialog() ?? false)
                 {
-                    CenterFacade.Update(new Center()
-                    {
-                        Name = form.NameTextBox.Text,
-                        Code = form.CodeTextBox.Text,
-                        Description = form.DescriptionTextBox.Text
-                    });
+                    var room = form.RetrieveFormData();
+                    RoomFacade.Update(room);
                     RoomsListBox.Items.Refresh();
                 }
             }
@@ -130,18 +108,12 @@ namespace UC.CSP.MeetingCenter
         {
             var dialog = new OpenFileDialog();
             string fileName = "";
-            if (dialog.ShowDialog().Value)
+            if (dialog.ShowDialog() ?? false)
             {
                 fileName = dialog.FileName;
             }
 
             CenterFacade.ImportFromCsv(fileName);
-            CentersListBox.ItemsSource = CenterFacade.GetAllCenters();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            ApplicationFacade.LoadData();
             CentersListBox.ItemsSource = CenterFacade.GetAllCenters();
         }
 
@@ -168,11 +140,20 @@ namespace UC.CSP.MeetingCenter
             }
         }
 
+        #endregion
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ApplicationFacade.LoadData();
+            CentersListBox.ItemsSource = CenterFacade.GetAllCenters();
+
+            CentersComboBox.ItemsSource = CenterFacade.GetAllCenters();
+        }
+
         private void SaveMenuItem_Click(object sender, RoutedEventArgs e)
         {
             ApplicationFacade.Save();
         }
-        #endregion
 
         #region Meetings planning tab
         private void ExportButton_Click(object sender, RoutedEventArgs e)
@@ -182,18 +163,59 @@ namespace UC.CSP.MeetingCenter
 
         private void NewReservationButton_Click(object sender, RoutedEventArgs e)
         {
+            if (RoomsComboBox.SelectedItem is Room selectedRoom &&
+                ReservationDatePicker.SelectedDate is DateTime selectedDate)
+            {
+                var form = new ReservationForm(FormMode.New, selectedRoom, selectedDate);
+                if (form.ShowDialog() ?? false)
+                {
+                    var reservation = form.RetrieveFormData();
+                    ReservationFacade.Create(reservation);
 
+                    ReservationListBox.ItemsSource = (RoomsComboBox.SelectedItem as Room).Reservations;
+                    ReservationListBox.Items.Refresh();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select Center, Room and Date of meeting first.", "",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void EditReservationButton_Click(object sender, RoutedEventArgs e)
         {
-
+            //if (CentersComboBox.SelectedItem is Center selectedCenter)
+            //    if (RoomsComboBox.SelectedItem is Room selectedRoom)
+            if (ReservationListBox.SelectedItem is Reservation selectedReservation)
+            {
+                var form = new ReservationForm(FormMode.Edit, selectedReservation);
+                if (form.ShowDialog() ?? false)
+                {
+                    var reservation = form.RetrieveFormData();
+                    ReservationFacade.Update(reservation);
+                    ReservationListBox.Items.Refresh();
+                }
+            }
         }
 
         private void DeleteReservationButton_Click(object sender, RoutedEventArgs e)
         {
 
         }
+
+        private void CentersComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (CentersComboBox.SelectedItem is Center selectedCenter)
+            {
+                RoomsComboBox.ItemsSource = selectedCenter.Rooms;
+            }
+            else
+            {
+                RoomsComboBox.ItemsSource = null;
+            }
+        }
+
         #endregion
     }
 }

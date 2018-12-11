@@ -11,7 +11,7 @@ namespace UC.CSP.MeetingCenter.BL.Facades
     {
         // TODO: Change return values from entities to DTOs
 
-        private IRepository<Center> CenterRepository { get; }
+        private CenterRepository CenterRepository { get; }
         private CsvImportService CsvImportService { get; }
         private CentersQuery CentersQuery { get; }
         public CenterFacade()

@@ -12,7 +12,7 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
             return Context.Rooms.FirstOrDefault(r => r.Id == id);
         }
 
-        public override Room GetByCode(string code)
+        public Room GetByCode(string code)
         {
             return Context.Rooms.FirstOrDefault(r => r.Code == code);
         }
@@ -21,6 +21,7 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
         {
             VerifyConstraints(entity);
 
+            Context.NoteChange();
             entity.Id = Context.Rooms.Max(r => r.Id) + 1;
             Context.Rooms.Add(entity);
         }
@@ -38,11 +39,13 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
                 throw new ArgumentException("Updated room does not exists.");
             }
 
+            Context.NoteChange();
             Map(entity, oldEntity);
         }
 
         public override void Delete(Room entity)
         {
+            Context.NoteChange();
             Context.Rooms.Remove(entity);
         }
 

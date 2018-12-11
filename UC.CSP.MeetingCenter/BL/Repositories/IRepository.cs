@@ -6,7 +6,6 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
     public interface IRepository<TEntity> where TEntity : IEntity
     {
         TEntity GetById(int id);
-        TEntity GetByCode(string code);
         void Create(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);

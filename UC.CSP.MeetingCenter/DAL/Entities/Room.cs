@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace UC.CSP.MeetingCenter.DAL.Entities
 {
@@ -11,6 +12,7 @@ namespace UC.CSP.MeetingCenter.DAL.Entities
         public int Capacity { get; set; }
         public bool HasVideo { get; set; }
         public string CenterCode { get; set; }
+        public List<Reservation> Reservations { get; set; } = new List<Reservation>();
         public override string ToString()
         {
             return Name;

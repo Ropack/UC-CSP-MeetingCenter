@@ -16,6 +16,7 @@ namespace UC.CSP.MeetingCenter.BL.Services
                 var context = DatabaseContextFactory.GetContext();
                 ClearContext(context);
                 ParseCsv(sr, context);
+                context.NoteChange();
             }
         }
 

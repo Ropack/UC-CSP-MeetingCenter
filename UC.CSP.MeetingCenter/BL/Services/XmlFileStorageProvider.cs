@@ -12,15 +12,15 @@ namespace UC.CSP.MeetingCenter.BL.Services
 
         public void Save()
         {
-            var subReq = DatabaseContextFactory.GetContext();
-            XmlSerializer xsSubmit = new XmlSerializer(subReq.GetType());
+            var context = DatabaseContextFactory.GetContext();
+            XmlSerializer serializer = new XmlSerializer(context.GetType());
             var xml = "";
             using(var sw = new StreamWriter(fileName))
             using(var sww = new StringWriter())
             {
                 using(XmlWriter writer = XmlWriter.Create(sww, new XmlWriterSettings() {Indent = true}))
                 {
-                    xsSubmit.Serialize(writer, subReq);
+                    serializer.Serialize(writer, context);
                     xml = sww.ToString();
                     sw.WriteLine(xml);
                 }
@@ -30,8 +30,14 @@ namespace UC.CSP.MeetingCenter.BL.Services
         public void Load()
         {
             if (!File.Exists(fileName)) return;
-            
-            
+
+            var context = DatabaseContextFactory.GetContext();
+            XmlSerializer serializer = new XmlSerializer(context.GetType());
+            using (var sr = new StreamReader(fileName))
+            using (var sww = new StringReader(sr.ReadToEnd()))
+            {
+                DatabaseContextFactory.SetContext(serializer.Deserialize(sww) as IDatabaseContext);
+            }
         }
     }
 }

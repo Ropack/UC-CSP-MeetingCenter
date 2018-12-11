@@ -8,7 +8,6 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
         protected IDatabaseContext Context => DatabaseContextFactory.GetContext();
 
         public abstract TEntity GetById(int id);
-        public abstract TEntity GetByCode(string code);
         public abstract void Create(TEntity entity);
         public abstract void Update(TEntity entity);
         public abstract void Delete(TEntity entity);

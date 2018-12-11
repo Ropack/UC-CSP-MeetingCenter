@@ -1,74 +1,50 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UC.CSP.MeetingCenter.BL;
+using UC.CSP.MeetingCenter.BL.Validation;
 
 namespace UC.CSP.MeetingCenter.DAL.Entities
 {
-    public class Reservation : IEntity
+    public class Reservation : IEntity, IValidatable
     {
-        private int expectedPersonsCount;
-        private string customer;
-        private bool videoConference;
-        private string note;
         public int Id { get; set; }
-        public Room MeetingRoom { get; set; }
+        public virtual Room MeetingRoom { get; set; }
         public DateTime Date { get; set; }
         public TimeSpan TimeFrom { get; set; }
         public TimeSpan TimeTo { get; set; }
+        public int ExpectedPersonsCount { get; set; }
+        public string Customer { get; set; }
+        public bool VideoConference { get; set; }
+        public string Note { get; set; }
 
-        public int ExpectedPersonsCount
+        public void Validate()
         {
-            get => expectedPersonsCount;
-            set
+            var validationErrors = new List<ValidationError>();
+            if (ExpectedPersonsCount < 1)
             {
-                if (value < 1)
-                {
-                    throw new ValidationException("Expected persons count cannot be lower than 1.");
-                }
-                if (value > MeetingRoom.Capacity)
-                {
-                    throw new ValidationException("Expected persons count cannot be higher than the capacity of the room.");
-                }
-
-                expectedPersonsCount = value;
+                validationErrors.Add(new ValidationError("Expected persons count cannot be lower than 1."));
             }
-        }
-
-        public string Customer
-        {
-            get => customer;
-            set
+            if (ExpectedPersonsCount > MeetingRoom.Capacity)
             {
-                if (value.Length < 2 || value.Length > 100)
-                {
-                    throw new ValidationException("Customer name length must be between 2 and 100 characters.");
-                }
-                customer = value;
+                validationErrors.Add(new ValidationError("Expected persons count cannot be higher than the capacity of the room."));
             }
-        }
-
-        public bool VideoConference
-        {
-            get => videoConference;
-            set
+            if (Customer.Length < 2 || Customer.Length > 100)
             {
-                if (value && !MeetingRoom.HasVideo)
-                {
-                    throw new ValidationException("Selected room does not support video conference.");
-                }
-                videoConference = value;
+                validationErrors.Add(new ValidationError("Customer name length must be between 2 and 100 characters."));
             }
-        }
-
-        public string Note
-        {
-            get => note;
-            set
+            if (VideoConference && !MeetingRoom.HasVideo)
             {
-                if (value.Length > 300)
-                {
-                    throw new ValidationException("Note cannot be longer than 300 characters.");
-                }
-                note = value;
+                validationErrors.Add(new ValidationError("Selected room does not support video conference."));
+            }
+            if (Note.Length > 300)
+            {
+                validationErrors.Add(new ValidationError("Note cannot be longer than 300 characters."));
+            }
+
+            if (validationErrors.Any())
+            {
+                throw new ValidationException(validationErrors);
             }
         }
     }

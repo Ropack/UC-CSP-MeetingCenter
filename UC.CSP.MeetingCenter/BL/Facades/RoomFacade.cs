@@ -7,7 +7,7 @@ namespace UC.CSP.MeetingCenter.BL.Facades
     {
         // TODO: Change return values from entities to DTOs
 
-        private IRepository<Room> RoomRepository { get; }
+        private RoomRepository RoomRepository { get; }
         public RoomFacade()
         {
             RoomRepository = new RoomRepository();

@@ -12,7 +12,7 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
             return Context.Centers.FirstOrDefault(r => r.Id == id);
         }
 
-        public override Center GetByCode(string code)
+        public Center GetByCode(string code)
         {
             return Context.Centers.FirstOrDefault(r => r.Code == code);
         }
@@ -21,6 +21,7 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
         {
             VerifyConstraints(entity);
 
+            Context.NoteChange();
             entity.Id = Context.Centers.Max(r => r.Id) + 1;
             Context.Centers.Add(entity);
         }
@@ -38,11 +39,13 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
                 throw new ArgumentException("Updated center does not exists.");
             }
 
+            Context.NoteChange();
             Map(entity, oldEntity);
         }
 
         public override void Delete(Center entity)
         {
+            Context.NoteChange();
             Context.Centers.Remove(entity);
         }
 

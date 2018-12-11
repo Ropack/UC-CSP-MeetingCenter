@@ -15,6 +15,7 @@ namespace UC.CSP.MeetingCenter.DAL
         public static void SetContext(IDatabaseContext context)
         {
             instance = context;
+            instance.TrackChanges();
         }
     }
 }
