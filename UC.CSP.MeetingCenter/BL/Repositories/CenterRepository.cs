@@ -9,7 +9,23 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
     {
         public override Center GetById(int id)
         {
-            return Context.Centers.FirstOrDefault(r => r.Id == id);
+            var center = Context.Centers.FirstOrDefault(r => r.Id == id);
+            if (center != null)
+            {
+                //center.Rooms = Context.Rooms.Where(r => r.CenterCode == center.Code).ToList();
+                //// this is definitely bad, but we don't use database and have only few data
+                //// entity framework would take care of that
+                //foreach (var room in center.Rooms)
+                //{
+                //    room.Reservations = Context.Reservations.Where(r => r.MeetingRoomId == room.Id).ToList();
+                //    foreach (var reservation in room.Reservations)
+                //    {
+                //        reservation.MeetingRoom = room;
+                //    }
+                //}
+            }
+            
+            return center;
         }
 
         public Center GetByCode(string code)
@@ -22,7 +38,7 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
             VerifyConstraints(entity);
 
             Context.NoteChange();
-            entity.Id = Context.Centers.Max(r => r.Id) + 1;
+            entity.Id = Context.Centers.Any() ? Context.Centers.Max(r => r.Id) + 1 : 1;
             Context.Centers.Add(entity);
         }
 

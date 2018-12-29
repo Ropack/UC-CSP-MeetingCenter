@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
-using UC.CSP.MeetingCenter.BL.Queries;
+using UC.CSP.MeetingCenter.BL.Facades;
+using UC.CSP.MeetingCenter.BL.Validation;
 using UC.CSP.MeetingCenter.DAL.Entities;
 
 namespace UC.CSP.MeetingCenter.APP
@@ -10,11 +12,9 @@ namespace UC.CSP.MeetingCenter.APP
     /// </summary>
     public partial class ReservationForm : Window
     {
-        public ReservationForm()
-        {
-            InitializeComponent();
-        }
         private Reservation Reservation { get; set; }
+        private ReservationFacade ReservationFacade { get; }
+        private FormMode Mode { get; }
         public ReservationForm(FormMode mode, Room selectedRoom, DateTime selectedDate)
         {
             InitializeComponent();
@@ -22,23 +22,49 @@ namespace UC.CSP.MeetingCenter.APP
             InitForm(new Reservation()
             {
                 MeetingRoom = selectedRoom,
+                MeetingRoomId = selectedRoom.Id,
                 Date = selectedDate.Date
             });
+
+            Mode = mode;
+            ReservationFacade = new ReservationFacade();
         }
         public ReservationForm(FormMode mode, Reservation reservation)
         {
             InitializeComponent();
             SetTitle(mode);
             InitForm(reservation);
+
+            Mode = mode;
+            ReservationFacade = new ReservationFacade();
         }
         public Reservation RetrieveFormData()
         {
-            Reservation.ExpectedPersonsCount = Convert.ToInt32(PersonsCountTextBox.Text);
+            var validationErrors = new List<ValidationError>();
+
+            if (int.TryParse(PersonsCountTextBox.Text, out var expectedPersonsCount))
+            {
+                Reservation.ExpectedPersonsCount = expectedPersonsCount;
+            }
+            else
+            {
+                validationErrors.Add(new ValidationError("Person count is in a wrong format."));
+            }
             Reservation.Customer = CustomerTextBox.Text;
-            Reservation.TimeFrom = TimeSpan.Parse($"{TimeFromHoursTextBox.Text}:{TimeFromMinutesTextBox.Text}");
-            Reservation.TimeTo = TimeSpan.Parse($"{TimeToHoursTextBox.Text}:{TimeToMinutesTextBox.Text}");
+            if (TimeSpan.TryParse($"{TimeFromHoursTextBox.Text}:{TimeFromMinutesTextBox.Text}", out var timeFrom) &&
+                TimeSpan.TryParse($"{TimeToHoursTextBox.Text}:{TimeToMinutesTextBox.Text}", out var timeTo))
+            {
+                Reservation.TimeFrom = Convert.ToDateTime(timeFrom.ToString());
+                Reservation.TimeTo = Convert.ToDateTime(timeTo.ToString());
+            }
+            else
+            {
+                validationErrors.Add(new ValidationError("Time is in a wrong format."));
+            }
             Reservation.VideoConference = VideoConferenceCheckBox.IsChecked ?? false;
             Reservation.Note = NoteTextBox.Text;
+
+            Reservation.Validate(validationErrors);
             return Reservation;
         }
 
@@ -47,10 +73,10 @@ namespace UC.CSP.MeetingCenter.APP
             Reservation = reservation;
             PersonsCountTextBox.Text = Reservation.ExpectedPersonsCount.ToString();
             CustomerTextBox.Text = Reservation.Customer;
-            TimeFromHoursTextBox.Text = Reservation.TimeFrom.Hours.ToString();
-            TimeFromMinutesTextBox.Text = Reservation.TimeFrom.Minutes.ToString();
-            TimeToHoursTextBox.Text = Reservation.TimeTo.Hours.ToString();
-            TimeToMinutesTextBox.Text = Reservation.TimeTo.Minutes.ToString();
+            TimeFromHoursTextBox.Text = Reservation.TimeFrom.TimeOfDay.Hours.ToString();
+            TimeFromMinutesTextBox.Text = Reservation.TimeFrom.TimeOfDay.Minutes.ToString();
+            TimeToHoursTextBox.Text = Reservation.TimeTo.TimeOfDay.Hours.ToString();
+            TimeToMinutesTextBox.Text = Reservation.TimeTo.TimeOfDay.Minutes.ToString();
             VideoConferenceCheckBox.IsChecked = Reservation.VideoConference;
             NoteTextBox.Text = Reservation.Note;
         }
@@ -75,11 +101,19 @@ namespace UC.CSP.MeetingCenter.APP
         {
             this.ExecuteSafe(() =>
             {
-                RetrieveFormData().Validate();
+                var reservation = RetrieveFormData();
+                if (Mode == FormMode.New)
+                {
+                    ReservationFacade.Create(reservation);
+                }
+                else if (Mode == FormMode.Edit)
+                {
+                    ReservationFacade.Update(reservation);
+                }
                 DialogResult = true;
                 Close();
             });
-            
+
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

@@ -8,7 +8,9 @@ namespace UC.CSP.MeetingCenter.BL.Queries
     {
         public List<Center> Execute()
         {
-            return Context.Centers.ToList();
+            var centers = Context.Centers.ToList();
+
+            return centers;
         }
     }
 }

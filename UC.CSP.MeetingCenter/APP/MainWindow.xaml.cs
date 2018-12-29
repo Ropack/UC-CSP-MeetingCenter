@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using UC.CSP.MeetingCenter.BL.Facades;
+using UC.CSP.MeetingCenter.BL.Services;
 using UC.CSP.MeetingCenter.DAL.Entities;
 
 namespace UC.CSP.MeetingCenter.APP
@@ -24,7 +25,70 @@ namespace UC.CSP.MeetingCenter.APP
             ApplicationFacade = new ApplicationFacade();
         }
 
+
+        private void ImportMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show($"Do you really want to import data from file? All current data will be lost.", "CSV Import",
+                    MessageBoxButton.YesNoCancel, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                this.ExecuteSafe(() => {
+                    var dialog = new OpenFileDialog();
+                    string fileName = "";
+                    if (dialog.ShowDialog() ?? false)
+                    {
+                        fileName = dialog.FileName;
+                    }
+
+                    CenterFacade.ImportFromCsv(fileName);
+
+                    RefreshMeetingCenterTab();
+                    RefreshReservationsTab();
+                }, errorMessageText: "Import failed.");
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ApplicationFacade.LoadData();
+            ReservationDatePicker.SelectedDate = DateTime.Today;
+            RefreshMeetingCenterTab();
+            RefreshReservationsTab();
+            
+        }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (ApplicationFacade.HasDataChanged())
+            {
+                var messageBoxResult = MessageBox.Show("Do you want to save the changes?", "Meeting Center", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                switch (messageBoxResult)
+                {
+                    case MessageBoxResult.None:
+                    case MessageBoxResult.Cancel:
+                        e.Cancel = true;
+                        break;
+                    case MessageBoxResult.Yes:
+                        this.ExecuteSafe(() => { ApplicationFacade.Save(); }, errorAction: () => e.Cancel = true);
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                }
+            }
+        }
+
+        private void SaveMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ApplicationFacade.Save();
+        }
+
         #region Centers tab 
+
+        private void RefreshMeetingCenterTab()
+        {
+            CentersListBox.ItemsSource = CenterFacade.GetAllCenters();
+            CentersListBox.Items.Refresh();
+            RoomsListBox.Items.Refresh();
+        }
+
         private void NewCenterButton_Click(object sender, RoutedEventArgs e)
         {
             if (CentersListBox.SelectedItem is Center selectedCenter)
@@ -104,19 +168,6 @@ namespace UC.CSP.MeetingCenter.APP
             }
         }
 
-        private void ImportMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFileDialog();
-            string fileName = "";
-            if (dialog.ShowDialog() ?? false)
-            {
-                fileName = dialog.FileName;
-            }
-
-            CenterFacade.ImportFromCsv(fileName);
-            CentersListBox.ItemsSource = CenterFacade.GetAllCenters();
-        }
-
         private void CentersListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (CentersListBox.SelectedItem is Center selectedCenter)
@@ -141,24 +192,38 @@ namespace UC.CSP.MeetingCenter.APP
         }
 
         #endregion
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            ApplicationFacade.LoadData();
-            CentersListBox.ItemsSource = CenterFacade.GetAllCenters();
-
-            CentersComboBox.ItemsSource = CenterFacade.GetAllCenters();
-        }
-
-        private void SaveMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            ApplicationFacade.Save();
-        }
+        
 
         #region Meetings planning tab
+
+        private void RefreshReservationsTab()
+        {
+            CentersComboBox.ItemsSource = CenterFacade.GetAllCenters();
+            CentersComboBox.Items.Refresh();
+            if (RoomsComboBox.SelectedItem is Room selectedRoom &&
+                ReservationDatePicker.SelectedDate is DateTime selectedDate)
+            {
+                ReservationListBox.ItemsSource =
+                    ReservationFacade.GetReservationsByRoomAndDate(selectedRoom.Id, selectedDate);
+            }
+            else
+            {
+                ReservationListBox.ItemsSource = null;
+            }
+        }
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
+            this.ExecuteSafe(() => {
+                //var dialog = new OpenFileDialog();
+                //string fileName = "";
+                //if (dialog.ShowDialog() ?? false)
+                //{
+                //    fileName = dialog.FileName;
+                //}
 
+                var service = new JsonExportService();
+                service.Export("export.json");
+            }, errorMessageText: "Export failed.");
         }
 
         private void NewReservationButton_Click(object sender, RoutedEventArgs e)
@@ -169,11 +234,7 @@ namespace UC.CSP.MeetingCenter.APP
                 var form = new ReservationForm(FormMode.New, selectedRoom, selectedDate);
                 if (form.ShowDialog() ?? false)
                 {
-                    var reservation = form.RetrieveFormData();
-                    ReservationFacade.Create(reservation);
-
-                    ReservationListBox.ItemsSource = (RoomsComboBox.SelectedItem as Room).Reservations;
-                    ReservationListBox.Items.Refresh();
+                    RefreshReservationsTab();
                 }
             }
             else
@@ -185,23 +246,27 @@ namespace UC.CSP.MeetingCenter.APP
 
         private void EditReservationButton_Click(object sender, RoutedEventArgs e)
         {
-            //if (CentersComboBox.SelectedItem is Center selectedCenter)
-            //    if (RoomsComboBox.SelectedItem is Room selectedRoom)
             if (ReservationListBox.SelectedItem is Reservation selectedReservation)
             {
                 var form = new ReservationForm(FormMode.Edit, selectedReservation);
                 if (form.ShowDialog() ?? false)
                 {
-                    var reservation = form.RetrieveFormData();
-                    ReservationFacade.Update(reservation);
-                    ReservationListBox.Items.Refresh();
+                    RefreshReservationsTab();
                 }
             }
         }
 
         private void DeleteReservationButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (ReservationListBox.SelectedItem is Reservation selectedReservation)
+            {
+                if (MessageBox.Show($"Do you really want to reservation {selectedReservation}?", "Delete",
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    ReservationFacade.Delete(selectedReservation);
+                    ReservationListBox.Items.Refresh();
+                }
+            }
         }
 
         private void CentersComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -216,6 +281,29 @@ namespace UC.CSP.MeetingCenter.APP
             }
         }
 
+        private void RoomsComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            RefreshReservationsTab();
+        }
+
+        private void ReservationDatePicker_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            RefreshReservationsTab();
+        }
+
+        private void ReservationListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (ReservationListBox.SelectedItem is Reservation selectedReservation)
+            {
+                FromToTextBlock.Text = selectedReservation.ToString();
+                NoteTextBlock.Text = selectedReservation.Note;
+                CustomerTextBlock.Text = selectedReservation.Customer;
+                PersonsCountTextBlock.Text = selectedReservation.ExpectedPersonsCount.ToString();
+                ReservationVideoCheckBox.IsChecked = selectedReservation.VideoConference;
+            }
+        }
+
         #endregion
     }
 }
+

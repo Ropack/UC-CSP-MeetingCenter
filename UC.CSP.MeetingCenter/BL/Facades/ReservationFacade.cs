@@ -1,4 +1,8 @@
-﻿using UC.CSP.MeetingCenter.BL.Repositories;
+﻿using System;
+using System.Collections.Generic;
+using UC.CSP.MeetingCenter.BL.DTO;
+using UC.CSP.MeetingCenter.BL.Queries;
+using UC.CSP.MeetingCenter.BL.Repositories;
 using UC.CSP.MeetingCenter.DAL.Entities;
 
 namespace UC.CSP.MeetingCenter.BL.Facades
@@ -31,6 +35,16 @@ namespace UC.CSP.MeetingCenter.BL.Facades
         public void Delete(Reservation entity)
         {
             ReservationRepository.Delete(entity);
+        }
+
+        public List<Reservation> GetReservationsByRoomAndDate(int roomId, DateTime date)
+        {
+            var reservationFilterDTO = new ReservationFilterDTO()
+            {
+                DateTime = date,
+                RoomId = roomId
+            };
+            return new ReservationsQuery(reservationFilterDTO).Execute();
         }
     }
 }

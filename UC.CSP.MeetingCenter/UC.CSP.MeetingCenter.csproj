@@ -59,10 +59,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="APP\WindowExtensions.cs" />
+    <Compile Include="BL\DTO\ExportJsonDTO.cs" />
+    <Compile Include="BL\DTO\ReservationFilterDTO.cs" />
     <Compile Include="BL\Facades\ApplicationFacade.cs" />
     <Compile Include="BL\Facades\ReservationFacade.cs" />
+    <Compile Include="BL\Queries\ReservationsQuery.cs" />
     <Compile Include="BL\Repositories\ReservationRepository.cs" />
     <Compile Include="BL\Services\IStorageProvider.cs" />
+    <Compile Include="BL\Services\JsonExportService.cs" />
     <Compile Include="BL\Services\XmlFileStorageProvider.cs" />
     <Compile Include="BL\Validation\ValidationError.cs" />
     <Compile Include="BL\Validation\ValidationException.cs" />
@@ -148,8 +152,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BL\DTO\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

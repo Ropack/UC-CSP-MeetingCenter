@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UC.CSP.MeetingCenter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="768" Width="1366" Loaded="Window_Loaded">
+        Title="MainWindow" Height="768" Width="1366" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
@@ -68,31 +68,25 @@
                         <Label Content="Meetings Center" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
                         <ComboBox x:Name="CentersComboBox" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="CentersComboBox_SelectionChanged"/>
                         <Label Content="Meetings Room" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" />
-                        <ComboBox x:Name="RoomsComboBox" HorizontalAlignment="Left" Margin="10,129,0,0" VerticalAlignment="Top" Width="200"/>
+                        <ComboBox x:Name="RoomsComboBox" HorizontalAlignment="Left" Margin="10,129,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="RoomsComboBox_SelectionChanged"/>
                         <Label Content="Date" HorizontalAlignment="Left" Margin="10,156,0,0" VerticalAlignment="Top" />
-                        <DatePicker x:Name="ReservationDatePicker" HorizontalAlignment="Left" Margin="10,182,0,0" VerticalAlignment="Top" Width="200"/>
+                        <DatePicker x:Name="ReservationDatePicker" HorizontalAlignment="Left" Margin="10,182,0,0" VerticalAlignment="Top" Width="200" FirstDayOfWeek="Monday" SelectedDateChanged="ReservationDatePicker_SelectedDateChanged"/>
                         <Label Content="Meetings" HorizontalAlignment="Left" Margin="10,211,0,0" VerticalAlignment="Top" />
-                        <ListBox x:Name="ReservationListBox" HorizontalAlignment="Left" Height="257" Margin="10,237,0,0" VerticalAlignment="Top" Width="483"/>
+                        <ListBox x:Name="ReservationListBox" HorizontalAlignment="Left" Height="257" Margin="10,237,0,0" VerticalAlignment="Top" Width="483" SelectionChanged="ReservationListBox_SelectionChanged"/>
                         <Button x:Name="NewReservationButton" Content="New" HorizontalAlignment="Left" Margin="10,499,0,0" VerticalAlignment="Top" Width="75" Click="NewReservationButton_Click"/>
                         <Button x:Name="EditReservationButton" Content="Edit" HorizontalAlignment="Left" Margin="90,499,0,0" VerticalAlignment="Top" Width="75" Click="EditReservationButton_Click"/>
                         <Button x:Name="DeleteReservationButton" Content="Delete" HorizontalAlignment="Left" Margin="418,499,0,0" VerticalAlignment="Top" Width="75" Click="DeleteReservationButton_Click"/>
 
                         <Label Content="Meeting Details" FontSize="20" HorizontalAlignment="Left" Margin="686,10,0,0" VerticalAlignment="Top"/>
                         <Label Content="From - To" HorizontalAlignment="Left" Margin="686,52,0,0" VerticalAlignment="Top"/>
-                        <TextBlock Height="23" TextWrapping="Wrap" Text="" Margin="686,75,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25"/>
-                        <Label Content=":" HorizontalAlignment="Left" Margin="716,72,0,0" VerticalAlignment="Top"/>
-                        <TextBlock Height="23" TextWrapping="Wrap" Text="" Margin="734,75,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25"/>
-                        <TextBlock Height="23" TextWrapping="Wrap" Text="" Margin="836,75,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25"/>
-                        <Label Content=":" HorizontalAlignment="Left" Margin="866,72,0,0" VerticalAlignment="Top"/>
-                        <TextBlock Height="23" TextWrapping="Wrap" Text="" Margin="884,75,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25"/>
-                        <Label Content="-" HorizontalAlignment="Left" Margin="794,72,0,0" VerticalAlignment="Top"/>
-                        <TextBlock Height="23" TextWrapping="Wrap" Text="" Margin="686,129,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="223"/>
+                        <TextBlock x:Name="FromToTextBlock" Height="23" TextWrapping="Wrap" Text="" Margin="686,75,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="161"/>
+                        <TextBlock x:Name="PersonsCountTextBlock" Height="23" TextWrapping="Wrap" Text="" Margin="686,129,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="223"/>
                         <Label Content="Expected persons count" HorizontalAlignment="Left" Margin="686,103,0,0" VerticalAlignment="Top"/>
-                        <TextBlock Height="23" TextWrapping="Wrap" Text="" Margin="686,182,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="223"/>
+                        <TextBlock x:Name="CustomerTextBlock" Height="23" TextWrapping="Wrap" Text="" Margin="686,182,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="223"/>
                         <Label Content="Customer" HorizontalAlignment="Left" Margin="686,156,0,0" VerticalAlignment="Top"/>
-                        <CheckBox IsEnabled="False" Content="Video Conference" Margin="686,211,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <CheckBox x:Name="ReservationVideoCheckBox" IsEnabled="False" Content="Video Conference" Margin="686,211,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <Label Content="Note" HorizontalAlignment="Left" Margin="686,233,0,0" VerticalAlignment="Top"/>
-                        <TextBlock TextWrapping="Wrap" Text="" Margin="686,259,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="389" Height="104"/>
+                        <TextBlock x:Name="NoteTextBlock" TextWrapping="Wrap" Text="" Margin="686,259,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="389" Height="104"/>
                         <Button x:Name="ExportButton" Content="Export" HorizontalAlignment="Left" Margin="1267,661,0,0" VerticalAlignment="Top" Width="75" Click="ExportButton_Click"/>
                     </Grid>
                 </TabItem>

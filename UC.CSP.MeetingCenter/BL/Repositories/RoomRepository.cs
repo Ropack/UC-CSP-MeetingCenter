@@ -9,12 +9,36 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
     {
         public override Room GetById(int id)
         {
-            return Context.Rooms.FirstOrDefault(r => r.Id == id);
+            var entity = Context.Rooms.FirstOrDefault(r => r.Id == id);
+            if (entity != null)
+            {
+                //// this is definitely bad, but we don't use database and have only few data
+                //// entity framework would take care of that
+                //entity.Center = Context.Centers.Single(r => r.Code == entity.CenterCode);
+                //entity.Reservations = Context.Reservations.Where(r => r.MeetingRoomId == entity.Id).ToList();
+                //foreach (var reservation in entity.Reservations)
+                //{
+                //    reservation.MeetingRoom = entity;
+                //}
+            }
+
+            return entity;
         }
 
         public Room GetByCode(string code)
         {
-            return Context.Rooms.FirstOrDefault(r => r.Code == code);
+            var entity = Context.Rooms.FirstOrDefault(r => r.Code == code);
+            if (entity != null)
+            {
+                entity.Center = Context.Centers.Single(r => r.Code == entity.CenterCode); 
+                entity.Reservations = Context.Reservations.Where(r => r.MeetingRoomId == entity.Id).ToList();
+                foreach (var reservation in entity.Reservations)
+                {
+                    reservation.MeetingRoom = entity;
+                }
+            }
+
+            return entity;
         }
 
         public override void Create(Room entity)
@@ -22,7 +46,8 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
             VerifyConstraints(entity);
 
             Context.NoteChange();
-            entity.Id = Context.Rooms.Max(r => r.Id) + 1;
+            entity.Id = Context.Rooms.Any() ? Context.Rooms.Max(r => r.Id) + 1 : 1;
+            Context.Centers.Single(c => c.Code == entity.CenterCode).Rooms.Add(entity);
             Context.Rooms.Add(entity);
         }
 

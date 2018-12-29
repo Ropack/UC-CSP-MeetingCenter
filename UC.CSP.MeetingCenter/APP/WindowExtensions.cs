@@ -36,7 +36,7 @@ namespace UC.CSP.MeetingCenter.APP
             catch (Exception ex)
             {
                 errorAction();
-                if (!string.IsNullOrEmpty(errorMessageText))
+                if (string.IsNullOrEmpty(errorMessageText))
                 {
                     errorMessageText = "Unexpected error occured.";
                 }
