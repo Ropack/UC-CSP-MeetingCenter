@@ -15,7 +15,7 @@ namespace UC.CSP.MeetingCenter.BL.Queries
         public List<Reservation> Execute()
         {
             var reservations = Context.Reservations
-                .Where(r => r.MeetingRoomId == Filter.RoomId)
+                .Where(r => r.RoomId == Filter.RoomId)
                 .Where(r => r.Date.Date == Filter.DateTime.Date)
                 .OrderBy(r => r.TimeFrom).ToList();
 

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 using UC.CSP.MeetingCenter.DAL;
 
@@ -11,24 +12,29 @@ namespace UC.CSP.MeetingCenter.BL.Services
 
         public void Save()
         {
-            var json = JsonConvert.SerializeObject(DatabaseContextFactory.GetContext(), Formatting.Indented);
-            
-            using (var sw = new StreamWriter(fileName))
-            {
-                sw.Write(json);
-            }
+
+            throw new NotImplementedException("This shouldn't be used, data are stored in db instead of file.");
+            //var json = JsonConvert.SerializeObject(DatabaseContextFactory.GetContext(), Formatting.Indented);
+
+            //using (var sw = new StreamWriter(fileName))
+            //{
+            //    sw.Write(json);
+            //}
+
         }
 
         public void Load()
         {
-            if (!File.Exists(fileName)) return;
-            
-            var context = DatabaseContextFactory.GetContext();
-            using (var sr = new StreamReader(fileName))
-            {
-                var json = sr.ReadToEnd();
-                DatabaseContextFactory.SetContext(JsonConvert.DeserializeObject(json, context.GetType()) as IDatabaseContext);
-            }
+
+            throw new NotImplementedException("This shouldn't be used, data are stored in db instead of file.");
+            //if (!File.Exists(fileName)) return;
+
+            //var context = DatabaseContextFactory.GetContext();
+            //using (var sr = new StreamReader(fileName))
+            //{
+            //    var json = sr.ReadToEnd();
+            //    DatabaseContextFactory.SetContext(JsonConvert.DeserializeObject(json, context.GetType()) as AppDbContext);
+            //}
         }
     }
 }

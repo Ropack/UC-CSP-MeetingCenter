@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using UC.CSP.MeetingCenter.DAL;
@@ -16,11 +17,10 @@ namespace UC.CSP.MeetingCenter.BL.Services
                 var context = DatabaseContextFactory.GetContext();
                 ClearContext(context);
                 ParseCsv(sr, context);
-                context.NoteChange();
             }
         }
 
-        private void ParseCsv(StreamReader sr, IDatabaseContext context)
+        private void ParseCsv(StreamReader sr, AppDbContext context)
         {
             sr.ReadLine(); //skip first line
             var centers = ParseCenters(sr);
@@ -29,7 +29,7 @@ namespace UC.CSP.MeetingCenter.BL.Services
             AddDataToContext(context, centers, rooms);
         }
 
-        private void AddDataToContext(IDatabaseContext context, List<Center> centers, List<Room> rooms)
+        private void AddDataToContext(AppDbContext context, List<Center> centers, List<Room> rooms)
         {
             foreach (var center in centers)
             {
@@ -45,7 +45,8 @@ namespace UC.CSP.MeetingCenter.BL.Services
         {
             foreach (var room in rooms)
             {
-                centers.First(c => c.Code == room.CenterCode).Rooms.Add(room);
+                throw new NotImplementedException();
+                //centers.First(c => c.Code == room.CenterCode).Rooms.Add(room);
             }
         }
 
@@ -84,18 +85,21 @@ namespace UC.CSP.MeetingCenter.BL.Services
                     Code = values[1],
                     Description = values[2],
                     Capacity = Convert.ToInt32(values[3]),
-                    HasVideo = values[4] == "YES",
-                    CenterCode = values[5]
+                    HasVideo = values[4] == "YES"//,
+                    //CenterCode = values[5] //TODO: code
                 });
             }
 
             return rooms;
         }
 
-        private void ClearContext(IDatabaseContext context)
+        private void ClearContext(AppDbContext context)
         {
-            context.Rooms.Clear();
-            context.Centers.Clear();
+            var rooms = context.Set<Room>();
+            context.Rooms.RemoveRange(rooms);
+            var centers = context.Set<Center>();
+            context.Centers.RemoveRange(centers);
+            //context.SaveChanges();
         }
     }
 }

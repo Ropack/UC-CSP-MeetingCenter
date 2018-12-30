@@ -35,10 +35,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -62,6 +69,7 @@
     <Compile Include="BL\DTO\ExportJsonDTO.cs" />
     <Compile Include="BL\DTO\ReservationFilterDTO.cs" />
     <Compile Include="BL\Facades\ApplicationFacade.cs" />
+    <Compile Include="BL\Facades\FacadeBase.cs" />
     <Compile Include="BL\Facades\ReservationFacade.cs" />
     <Compile Include="BL\Queries\ReservationsQuery.cs" />
     <Compile Include="BL\Repositories\ReservationRepository.cs" />
@@ -70,6 +78,10 @@
     <Compile Include="BL\Services\XmlFileStorageProvider.cs" />
     <Compile Include="BL\Validation\ValidationError.cs" />
     <Compile Include="BL\Validation\ValidationException.cs" />
+    <Compile Include="DAL\AppDbConfiguration.cs" />
+    <Compile Include="DAL\AppDbContext.cs" />
+    <Compile Include="DAL\AppUnitOfWork.cs" />
+    <Compile Include="DAL\AppUnitOfWorkProvider.cs" />
     <Compile Include="DAL\Entities\IValidatable.cs" />
     <Compile Include="DAL\Entities\Reservation.cs" />
     <Compile Include="APP\FormMode.cs" />
@@ -106,9 +118,7 @@
     <Compile Include="BL\Repositories\RoomRepository.cs" />
     <Compile Include="BL\Services\CsvImportService.cs" />
     <Compile Include="BL\Services\JsonFileStorageProvider.cs" />
-    <Compile Include="DAL\IDatabaseContext.cs" />
     <Compile Include="DAL\Entities\IEntity.cs" />
-    <Compile Include="DAL\InMemoryDatabaseContext.cs" />
     <Compile Include="BL\Repositories\IRepository.cs" />
     <Compile Include="APP\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -126,6 +136,11 @@
   <ItemGroup>
     <Compile Include="DAL\Entities\Center.cs" />
     <Compile Include="DAL\Entities\Room.cs" />
+    <Compile Include="DAL\Migrations\201812300024595_InitialMigration.cs" />
+    <Compile Include="DAL\Migrations\201812300024595_InitialMigration.Designer.cs">
+      <DependentUpon>201812300024595_InitialMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -139,6 +154,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="DAL\Migrations\201812300024595_InitialMigration.resx">
+      <DependentUpon>201812300024595_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -152,6 +170,5 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

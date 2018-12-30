@@ -7,7 +7,7 @@ using UC.CSP.MeetingCenter.DAL.Entities;
 
 namespace UC.CSP.MeetingCenter.BL.Facades
 {
-    public class CenterFacade
+    public class CenterFacade : FacadeBase
     {
         // TODO: Change return values from entities to DTOs
 
@@ -23,17 +23,27 @@ namespace UC.CSP.MeetingCenter.BL.Facades
 
         public Center GetById(int id)
         {
-            return CenterRepository.GetById(id);
+            using (UnitOfWorkProvider.Create())
+            {
+                return CenterRepository.GetById(id);
+            }
         }
 
         public Center GetByCode(string code)
         {
-            return CenterRepository.GetByCode(code);
+            using (UnitOfWorkProvider.Create())
+            {
+                return CenterRepository.GetByCode(code);
+            }
         }
 
         public void Create(Center entity)
         {
-            CenterRepository.Create(entity);
+            using (var uow = UnitOfWorkProvider.Create())
+            {
+                CenterRepository.Create(entity);
+                uow.Commit();
+            }
         }
 
         public void Update(Center entity)

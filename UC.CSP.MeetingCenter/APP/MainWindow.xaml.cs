@@ -49,6 +49,9 @@ namespace UC.CSP.MeetingCenter.APP
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            CenterFacade.GetById(1);
+            CenterFacade.Update(new Center());
+            CenterFacade.GetById(1);
             ApplicationFacade.LoadData();
             ReservationDatePicker.SelectedDate = DateTime.Today;
             RefreshMeetingCenterTab();

@@ -21,8 +21,8 @@ namespace UC.CSP.MeetingCenter.APP
             SetTitle(mode);
             InitForm(new Reservation()
             {
-                MeetingRoom = selectedRoom,
-                MeetingRoomId = selectedRoom.Id,
+                Room = selectedRoom,
+                RoomId = selectedRoom.Id,
                 Date = selectedDate.Date
             });
 

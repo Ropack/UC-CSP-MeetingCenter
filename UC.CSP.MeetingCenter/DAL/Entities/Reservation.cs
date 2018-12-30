@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Xml.Serialization;
 using UC.CSP.MeetingCenter.BL;
 using UC.CSP.MeetingCenter.BL.Validation;
+using ValidationException = UC.CSP.MeetingCenter.BL.Validation.ValidationException;
 
 namespace UC.CSP.MeetingCenter.DAL.Entities
 {
@@ -11,14 +14,18 @@ namespace UC.CSP.MeetingCenter.DAL.Entities
     {
         public int Id { get; set; }
         [XmlIgnore]
-        public Room MeetingRoom { get; set; }
-        public int MeetingRoomId { get; set; }
+        [ForeignKey(nameof(RoomId))]
+        public virtual Room Room { get; set; }
+        public int RoomId { get; set; }
         public DateTime Date { get; set; }
         public DateTime TimeFrom { get; set; }
         public DateTime TimeTo { get; set; }
         public int ExpectedPersonsCount { get; set; }
+        [Required]
+        [StringLength(100, MinimumLength = 2)]
         public string Customer { get; set; }
         public bool VideoConference { get; set; }
+        [StringLength(300)]
         public string Note { get; set; }
 
         public void Validate()
@@ -33,7 +40,7 @@ namespace UC.CSP.MeetingCenter.DAL.Entities
             {
                 validationErrors.Add(new ValidationError("Expected persons count cannot be lower than 1."));
             }
-            if (ExpectedPersonsCount > MeetingRoom.Capacity)
+            if (ExpectedPersonsCount > Room.Capacity)
             {
                 validationErrors.Add(new ValidationError("Expected persons count cannot be higher than the capacity of the room."));
             }
@@ -41,7 +48,7 @@ namespace UC.CSP.MeetingCenter.DAL.Entities
             {
                 validationErrors.Add(new ValidationError("Customer name length must be between 2 and 100 characters."));
             }
-            if (VideoConference && !MeetingRoom.HasVideo)
+            if (VideoConference && !Room.HasVideo)
             {
                 validationErrors.Add(new ValidationError("Selected room does not support video conference."));
             }

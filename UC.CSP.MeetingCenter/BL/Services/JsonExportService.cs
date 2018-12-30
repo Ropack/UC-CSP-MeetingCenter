@@ -24,7 +24,7 @@ namespace UC.CSP.MeetingCenter.BL.Services
             }
         }
 
-        public ExportJsonDTO ConvertToExportJsonDTO(IDatabaseContext context)
+        public ExportJsonDTO ConvertToExportJsonDTO(AppDbContext context)
         {
             var dto = new ExportJsonDTO()
             {
@@ -35,7 +35,7 @@ namespace UC.CSP.MeetingCenter.BL.Services
             {
                 var data = new Data()
                 {
-                    meetingCentre = room.CenterCode,
+                    meetingCentre = room.Center.Code,
                     meetingRoom = room.Code,
                     reservations = new Dictionary<string, List<JsonReservationDTO>>()
                 };

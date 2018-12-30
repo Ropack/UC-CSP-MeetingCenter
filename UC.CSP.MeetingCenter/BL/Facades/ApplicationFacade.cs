@@ -12,18 +12,20 @@ namespace UC.CSP.MeetingCenter.BL.Facades
         }
         public void LoadData()
         {
-            StorageProvider.Load();
+            //StorageProvider.Load();
         }
 
         public void Save()
         {
             StorageProvider.Save();
-            DatabaseContextFactory.GetContext().Changed = false;
         }
 
         public bool HasDataChanged()
         {
-            return DatabaseContextFactory.GetContext().Changed;
+            using (var context = DatabaseContextFactory.GetContext())
+            {
+                return context.ChangeTracker.HasChanges();
+            }
         }
     }
 }

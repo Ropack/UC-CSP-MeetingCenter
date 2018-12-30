@@ -90,6 +90,27 @@
                         <Button x:Name="ExportButton" Content="Export" HorizontalAlignment="Left" Margin="1267,661,0,0" VerticalAlignment="Top" Width="75" Click="ExportButton_Click"/>
                     </Grid>
                 </TabItem>
+                <TabItem Header="Accessories">
+                    <Grid>
+                        <Label Content="Accessories" FontSize="20" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"></Label>
+                        <ListView x:Name="AccessoriesListView" HorizontalAlignment="Left" Height="517" Margin="10,37,0,0" VerticalAlignment="Top" Width="1050" >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Category" Width="250" />
+                                    <GridViewColumn Header="Name" Width="450"/>
+                                    <GridViewColumn Header="Amount" Width="200"/>
+                                    <GridViewColumn Header="Min." Width="150"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Button x:Name="NewAccessoryButton" Content="New" HorizontalAlignment="Left" Margin="1208,38,0,0" VerticalAlignment="Top" Width="75"/>
+                        <Button x:Name="EditAccessoryButton" Content="Edit" HorizontalAlignment="Left" Margin="1208,95,0,0" VerticalAlignment="Top" Width="75"/>
+                        <Button x:Name="DeleteAccessoryButton" Content="Delete" HorizontalAlignment="Left" Margin="1208,169,0,0" VerticalAlignment="Top" Width="75"/>
+                        <Button x:Name="HandOverAccessoryButton" Content="Hand over" HorizontalAlignment="Left" Margin="30,600,0,0" VerticalAlignment="Top" Width="100"/>
+                        <Button x:Name="AcceptDeliveryAccessoryButton" Content="Accept delivery" HorizontalAlignment="Left" Margin="30,640,0,0" VerticalAlignment="Top" Width="100"/>
+
+                    </Grid>
+                </TabItem>
             </TabControl>
             <!--</StackPanel>-->
         </DockPanel>
