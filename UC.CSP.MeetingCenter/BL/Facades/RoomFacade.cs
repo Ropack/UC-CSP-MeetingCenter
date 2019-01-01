@@ -3,7 +3,7 @@ using UC.CSP.MeetingCenter.DAL.Entities;
 
 namespace UC.CSP.MeetingCenter.BL.Facades
 {
-    public class RoomFacade
+    public class RoomFacade : FacadeBase
     {
         // TODO: Change return values from entities to DTOs
 
@@ -15,27 +15,45 @@ namespace UC.CSP.MeetingCenter.BL.Facades
 
         public Room GetById(int id)
         {
-            return RoomRepository.GetById(id);
+            using (var uow = UnitOfWorkProvider.Create())
+            {
+                return RoomRepository.GetById(id);
+            }
         }
 
         public Room GetByCode(string code)
         {
-            return RoomRepository.GetByCode(code);
+            using (var uow = UnitOfWorkProvider.Create())
+            {
+                return RoomRepository.GetByCode(code);
+            }
         }
 
         public void Create(Room entity)
         {
-            RoomRepository.Create(entity);
+            using (var uow = UnitOfWorkProvider.Create())
+            {
+                RoomRepository.Create(entity);
+                uow.Commit();
+            }
         }
 
         public void Update(Room entity)
         {
-            RoomRepository.Update(entity);
+            using (var uow = UnitOfWorkProvider.Create())
+            {
+                RoomRepository.Update(entity);
+                uow.Commit();
+            }
         }
 
         public void Delete(Room entity)
         {
-            RoomRepository.Delete(entity);
+            using (var uow = UnitOfWorkProvider.Create())
+            {
+                RoomRepository.Delete(entity);
+                uow.Commit();
+            }
         }
     }
 }

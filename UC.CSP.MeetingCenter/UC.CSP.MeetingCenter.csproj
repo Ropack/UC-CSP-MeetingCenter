@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=8.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.8.0.0\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -47,6 +50,9 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -65,13 +71,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="APP\AccessoriesForm.xaml.cs">
+      <DependentUpon>AccessoriesForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="APP\StockAccessoryForm.xaml.cs">
+      <DependentUpon>StockAccessoryForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="APP\StockFormMode.cs" />
+    <Compile Include="APP\ViewModels\MainViewModel.cs" />
     <Compile Include="APP\WindowExtensions.cs" />
+    <Compile Include="BL\AutoMapperConfiguration.cs" />
+    <Compile Include="BL\DTO\AccessoryDTO.cs" />
+    <Compile Include="BL\DTO\AccessoryStockDTO.cs" />
+    <Compile Include="BL\DTO\CategoryDTO.cs" />
+    <Compile Include="BL\DTO\CenterDTO.cs" />
     <Compile Include="BL\DTO\ExportJsonDTO.cs" />
     <Compile Include="BL\DTO\ReservationFilterDTO.cs" />
+    <Compile Include="BL\Facades\AccessoryFacade.cs" />
     <Compile Include="BL\Facades\ApplicationFacade.cs" />
     <Compile Include="BL\Facades\FacadeBase.cs" />
     <Compile Include="BL\Facades\ReservationFacade.cs" />
+    <Compile Include="BL\Queries\AccessoriesQuery.cs" />
+    <Compile Include="BL\Queries\CategoriesQuery.cs" />
     <Compile Include="BL\Queries\ReservationsQuery.cs" />
+    <Compile Include="BL\Repositories\AccessoryRepository.cs" />
     <Compile Include="BL\Repositories\ReservationRepository.cs" />
     <Compile Include="BL\Services\IStorageProvider.cs" />
     <Compile Include="BL\Services\JsonExportService.cs" />
@@ -82,6 +105,8 @@
     <Compile Include="DAL\AppDbContext.cs" />
     <Compile Include="DAL\AppUnitOfWork.cs" />
     <Compile Include="DAL\AppUnitOfWorkProvider.cs" />
+    <Compile Include="DAL\Entities\Accessory.cs" />
+    <Compile Include="DAL\Entities\Category.cs" />
     <Compile Include="DAL\Entities\IValidatable.cs" />
     <Compile Include="DAL\Entities\Reservation.cs" />
     <Compile Include="APP\FormMode.cs" />
@@ -91,6 +116,10 @@
     <Compile Include="APP\RoomForm.xaml.cs">
       <DependentUpon>RoomForm.xaml</DependentUpon>
     </Compile>
+    <Page Include="APP\AccessoriesForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="APP\CenterForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -132,6 +161,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="APP\StockAccessoryForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAL\Entities\Center.cs" />
@@ -139,6 +172,10 @@
     <Compile Include="DAL\Migrations\201812300024595_InitialMigration.cs" />
     <Compile Include="DAL\Migrations\201812300024595_InitialMigration.Designer.cs">
       <DependentUpon>201812300024595_InitialMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\Migrations\201812301417423_AddAccessories.cs" />
+    <Compile Include="DAL\Migrations\201812301417423_AddAccessories.Designer.cs">
+      <DependentUpon>201812301417423_AddAccessories.cs</DependentUpon>
     </Compile>
     <Compile Include="DAL\Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -156,6 +193,9 @@
     </Compile>
     <EmbeddedResource Include="DAL\Migrations\201812300024595_InitialMigration.resx">
       <DependentUpon>201812300024595_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DAL\Migrations\201812301417423_AddAccessories.resx">
+      <DependentUpon>201812301417423_AddAccessories.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

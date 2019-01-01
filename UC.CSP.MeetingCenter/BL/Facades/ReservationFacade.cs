@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UC.CSP.MeetingCenter.BL.DTO;
 using UC.CSP.MeetingCenter.BL.Queries;
 using UC.CSP.MeetingCenter.BL.Repositories;
+using UC.CSP.MeetingCenter.DAL;
 using UC.CSP.MeetingCenter.DAL.Entities;
 
 namespace UC.CSP.MeetingCenter.BL.Facades
 {
-    public class ReservationFacade
+    public class ReservationFacade : FacadeBase
     {
         // TODO: Change return values from entities to DTOs
 
@@ -19,32 +20,50 @@ namespace UC.CSP.MeetingCenter.BL.Facades
 
         public Reservation GetById(int id)
         {
-            return ReservationRepository.GetById(id);
+            using (UnitOfWorkProvider.Create())
+            {
+                return ReservationRepository.GetById(id);
+            }
         }
 
         public void Create(Reservation entity)
         {
-            ReservationRepository.Create(entity);
+            using (var uow = UnitOfWorkProvider.Create())
+            {
+                ReservationRepository.Create(entity);
+                uow.Commit();
+            }
         }
 
         public void Update(Reservation entity)
         {
-            ReservationRepository.Update(entity);
+            using (var uow = UnitOfWorkProvider.Create())
+            {
+                ReservationRepository.Update(entity);
+                uow.Commit();
+            }
         }
 
         public void Delete(Reservation entity)
         {
-            ReservationRepository.Delete(entity);
+            using (var uow = UnitOfWorkProvider.Create())
+            {
+                ReservationRepository.Delete(entity);
+                uow.Commit();
+            }
         }
 
         public List<Reservation> GetReservationsByRoomAndDate(int roomId, DateTime date)
         {
-            var reservationFilterDTO = new ReservationFilterDTO()
+            using (var uow = UnitOfWorkProvider.Create())
             {
-                DateTime = date,
-                RoomId = roomId
-            };
-            return new ReservationsQuery(reservationFilterDTO).Execute();
+                var reservationFilterDTO = new ReservationFilterDTO()
+                {
+                    DateTime = date,
+                    RoomId = roomId
+                };
+                return new ReservationsQuery(reservationFilterDTO).Execute();
+            }
         }
     }
 }

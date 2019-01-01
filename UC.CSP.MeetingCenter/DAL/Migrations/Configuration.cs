@@ -1,7 +1,6 @@
-using System;
-using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using UC.CSP.MeetingCenter.DAL.Entities;
 
 namespace UC.CSP.MeetingCenter.DAL.Migrations
 {
@@ -15,10 +14,32 @@ namespace UC.CSP.MeetingCenter.DAL.Migrations
 
         protected override void Seed(AppDbContext context)
         {
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data.
+            if (!context.Categories.Any())
+            {
+                context.Categories.AddRange(new[]
+                {
+                    new Category()
+                    {
+                        Name = "Hot drinks"
+                    },
+                    new Category()
+                    {
+                        Name = "Cold drinks"
+                    },
+                    new Category()
+                    {
+                        Name = "Snacks"
+                    },
+                    new Category()
+                    {
+                        Name = "Office supplies"
+                    },
+                    new Category()
+                    {
+                        Name = "Marketing materials"
+                    },
+                });
+            }
         }
     }
 }

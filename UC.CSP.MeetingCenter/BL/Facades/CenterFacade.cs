@@ -48,12 +48,20 @@ namespace UC.CSP.MeetingCenter.BL.Facades
 
         public void Update(Center entity)
         {
-            CenterRepository.Update(entity);
+            using (var uow = UnitOfWorkProvider.Create())
+            {
+                CenterRepository.Update(entity);
+                uow.Commit();
+            }
         }
 
         public void Delete(Center entity)
         {
-            CenterRepository.Delete(entity);
+            using (var uow = UnitOfWorkProvider.Create())
+            {
+                CenterRepository.Delete(entity);
+                uow.Commit();
+            }
         }
 
         public void ImportFromCsv(string filePath)
@@ -63,7 +71,10 @@ namespace UC.CSP.MeetingCenter.BL.Facades
 
         public List<Center> GetAllCenters()
         {
-            return CentersQuery.Execute();
+            using (UnitOfWorkProvider.Create())
+            {
+                return CentersQuery.Execute();
+            }
         }
     }
 }

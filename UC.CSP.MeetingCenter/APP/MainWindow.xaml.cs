@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Windows;
+using UC.CSP.MeetingCenter.APP.ViewModels;
+using UC.CSP.MeetingCenter.BL.DTO;
 using UC.CSP.MeetingCenter.BL.Facades;
 using UC.CSP.MeetingCenter.BL.Services;
 using UC.CSP.MeetingCenter.DAL.Entities;
@@ -12,17 +14,24 @@ namespace UC.CSP.MeetingCenter.APP
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Window
+
         private CenterFacade CenterFacade { get; }
         private RoomFacade RoomFacade { get; }
         private ReservationFacade ReservationFacade { get; }
         private ApplicationFacade ApplicationFacade { get; }
+        private AccessoryFacade AccessoryFacade { get; }
+        private MainViewModel MainViewModel { get; }
         public MainWindow()
         {
+            MainViewModel = new MainViewModel();
+            DataContext = MainViewModel;
             InitializeComponent();
             CenterFacade = new CenterFacade();
             RoomFacade = new RoomFacade();
             ReservationFacade = new ReservationFacade();
             ApplicationFacade = new ApplicationFacade();
+            AccessoryFacade = new AccessoryFacade();
         }
 
 
@@ -31,7 +40,8 @@ namespace UC.CSP.MeetingCenter.APP
             if (MessageBox.Show($"Do you really want to import data from file? All current data will be lost.", "CSV Import",
                     MessageBoxButton.YesNoCancel, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                this.ExecuteSafe(() => {
+                this.ExecuteSafe(() =>
+                {
                     var dialog = new OpenFileDialog();
                     string fileName = "";
                     if (dialog.ShowDialog() ?? false)
@@ -49,14 +59,12 @@ namespace UC.CSP.MeetingCenter.APP
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            CenterFacade.GetById(1);
-            CenterFacade.Update(new Center());
-            CenterFacade.GetById(1);
             ApplicationFacade.LoadData();
             ReservationDatePicker.SelectedDate = DateTime.Today;
             RefreshMeetingCenterTab();
             RefreshReservationsTab();
-            
+            RefreshAccessoriesTab();
+
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -82,6 +90,7 @@ namespace UC.CSP.MeetingCenter.APP
         {
             ApplicationFacade.Save();
         }
+        #endregion
 
         #region Centers tab 
 
@@ -195,7 +204,6 @@ namespace UC.CSP.MeetingCenter.APP
         }
 
         #endregion
-        
 
         #region Meetings planning tab
 
@@ -216,7 +224,8 @@ namespace UC.CSP.MeetingCenter.APP
         }
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            this.ExecuteSafe(() => {
+            this.ExecuteSafe(() =>
+            {
                 //var dialog = new OpenFileDialog();
                 //string fileName = "";
                 //if (dialog.ShowDialog() ?? false)
@@ -306,6 +315,78 @@ namespace UC.CSP.MeetingCenter.APP
             }
         }
 
+        #endregion
+
+        #region Accessories tab
+
+        private void RefreshAccessoriesTab()
+        {
+            this.ExecuteSafe(() =>
+            {
+                AccessoriesListView.ItemsSource = AccessoryFacade.GetAll();
+                AccessoriesListView.Items.Refresh();
+            });
+        }
+
+        private void NewAccessoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            var form = new AccessoriesForm(FormMode.New);
+            if (form.ShowDialog() ?? false)
+            {
+                RefreshAccessoriesTab();
+            }
+        }
+
+        private void EditAccessoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (AccessoriesListView.SelectedItem is AccessoryDTO selectedAccessory)
+            {
+                var form = new AccessoriesForm(FormMode.Edit, selectedAccessory);
+                if (form.ShowDialog() ?? false)
+                {
+                    RefreshAccessoriesTab();
+                }
+            }
+        }
+
+        private void DeleteAccessoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (AccessoriesListView.SelectedItem is AccessoryDTO selectedAccessory)
+            {
+                if (MessageBox.Show($"Do you really want to delete accessory {selectedAccessory.Name}?", "Delete",
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    this.ExecuteSafe(() =>
+                    {
+                        AccessoryFacade.Delete(selectedAccessory);
+                        RefreshAccessoriesTab();
+                    });
+                }
+            }
+        }
+
+        private void HandOverAccessoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            var form = new StockAccessoryForm(StockFormMode.Out);
+            if (form.ShowDialog() ?? false)
+            {
+                RefreshAccessoriesTab();
+            }
+        }
+
+        private void AcceptDeliveryAccessoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            var form = new StockAccessoryForm(StockFormMode.In);
+            if (form.ShowDialog() ?? false)
+            {
+                RefreshAccessoriesTab();
+            }
+        }
+
+        private void AccessoriesListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+
+        }
         #endregion
     }
 }

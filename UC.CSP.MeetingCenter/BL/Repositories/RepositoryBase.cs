@@ -13,7 +13,13 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
 
         public virtual void Update(TEntity entity)
         {
-            Context.Entry(entity).State = EntityState.Modified;
+            var e = GetById(entity.Id);
+            if (e == null)
+            {
+                return;
+            }
+
+            Context.Entry(e).CurrentValues.SetValues(entity);
         }
         public abstract void Delete(TEntity entity);
     }

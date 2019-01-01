@@ -18,7 +18,7 @@
             </Menu>
             <!--<StackPanel>-->
 
-            <TabControl>
+            <TabControl SelectedIndex="2">
                 <TabItem Header="Centers and Rooms">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -93,22 +93,23 @@
                 <TabItem Header="Accessories">
                     <Grid>
                         <Label Content="Accessories" FontSize="20" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"></Label>
-                        <ListView x:Name="AccessoriesListView" HorizontalAlignment="Left" Height="517" Margin="10,37,0,0" VerticalAlignment="Top" Width="1050" >
+                        <ListView x:Name="AccessoriesListView" HorizontalAlignment="Left" Height="517" Margin="10,37,0,0" VerticalAlignment="Top" Width="1060" SelectionChanged="AccessoriesListView_SelectionChanged" >
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="Category" Width="250" />
-                                    <GridViewColumn Header="Name" Width="450"/>
-                                    <GridViewColumn Header="Amount" Width="200"/>
-                                    <GridViewColumn Header="Min." Width="150"/>
+                                    <GridViewColumn Header="Category" Width="250" DisplayMemberBinding="{Binding Category}" />
+                                    <GridViewColumn Header="Name" Width="450" DisplayMemberBinding="{Binding Name}"/>
+                                    <GridViewColumn Header="Amount" Width="200" DisplayMemberBinding="{Binding StoredCount}"/>
+                                    <GridViewColumn Header="Min." Width="150" DisplayMemberBinding="{Binding RecommendedMinCount}"/>
                                 </GridView>
                             </ListView.View>
                         </ListView>
-                        <Button x:Name="NewAccessoryButton" Content="New" HorizontalAlignment="Left" Margin="1208,38,0,0" VerticalAlignment="Top" Width="75"/>
-                        <Button x:Name="EditAccessoryButton" Content="Edit" HorizontalAlignment="Left" Margin="1208,95,0,0" VerticalAlignment="Top" Width="75"/>
-                        <Button x:Name="DeleteAccessoryButton" Content="Delete" HorizontalAlignment="Left" Margin="1208,169,0,0" VerticalAlignment="Top" Width="75"/>
-                        <Button x:Name="HandOverAccessoryButton" Content="Hand over" HorizontalAlignment="Left" Margin="30,600,0,0" VerticalAlignment="Top" Width="100"/>
-                        <Button x:Name="AcceptDeliveryAccessoryButton" Content="Accept delivery" HorizontalAlignment="Left" Margin="30,640,0,0" VerticalAlignment="Top" Width="100"/>
+                        <Button x:Name="NewAccessoryButton" Content="New" HorizontalAlignment="Left" Margin="1208,38,0,0" VerticalAlignment="Top" Width="75" Click="NewAccessoryButton_Click"/>
+                        <Button x:Name="EditAccessoryButton" Content="Edit" HorizontalAlignment="Left" Margin="1208,95,0,0" VerticalAlignment="Top" Width="75" Click="EditAccessoryButton_Click"/>
+                        <Button x:Name="DeleteAccessoryButton" Content="Delete" HorizontalAlignment="Left" Margin="1208,169,0,0" VerticalAlignment="Top" Width="75" Click="DeleteAccessoryButton_Click"/>
+                        <Button x:Name="HandOverAccessoryButton" Content="Hand over" HorizontalAlignment="Left" Margin="30,600,0,0" VerticalAlignment="Top" Width="100" Click="HandOverAccessoryButton_Click"/>
+                        <Button x:Name="AcceptDeliveryAccessoryButton" Content="Accept delivery" HorizontalAlignment="Left" Margin="30,640,0,0" VerticalAlignment="Top" Width="100" Click="AcceptDeliveryAccessoryButton_Click"/>
 
+                        <TextBlock Height="100" TextWrapping="Wrap" Text="{Binding Path=Test}" Width="100" Margin="1136,292,116,299"/>
                     </Grid>
                 </TabItem>
             </TabControl>

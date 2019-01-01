@@ -28,7 +28,7 @@ namespace UC.CSP.MeetingCenter.DAL
         {
             if (CurrentUoW == null)
             {
-                throw new InvalidOperationException("The Repository must be used in a unit of work of type AppUnitOfWork!");
+                throw new InvalidOperationException("The Repository or Query must be used in a unit of work of type AppUnitOfWork!");
             }
             return CurrentUoW;
         }
