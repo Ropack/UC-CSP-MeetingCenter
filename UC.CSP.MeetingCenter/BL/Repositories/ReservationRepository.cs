@@ -6,21 +6,10 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
 {
     public class ReservationRepository : RepositoryBase<Reservation>
     {
-        public override Reservation GetById(int id)
-        {
-            var entity = Context.Reservations.FirstOrDefault(r => r.Id == id);
-            return entity;
-        }
-
         public override void Create(Reservation entity)
         {
             VerifyConstraints(entity);
             Context.Reservations.Add(entity);
-        }
-
-        public override void Delete(Reservation entity)
-        {
-            Context.Reservations.Remove(entity);
         }
 
         private void VerifyConstraints(Reservation entity)

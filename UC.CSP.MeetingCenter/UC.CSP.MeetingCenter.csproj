@@ -96,6 +96,7 @@
     <Compile Include="BL\Queries\ReservationsQuery.cs" />
     <Compile Include="BL\Repositories\AccessoryRepository.cs" />
     <Compile Include="BL\Repositories\ReservationRepository.cs" />
+    <Compile Include="BL\Repositories\StockOperationRepository.cs" />
     <Compile Include="BL\Services\IStorageProvider.cs" />
     <Compile Include="BL\Services\JsonExportService.cs" />
     <Compile Include="BL\Services\XmlFileStorageProvider.cs" />
@@ -169,6 +170,7 @@
   <ItemGroup>
     <Compile Include="DAL\Entities\Center.cs" />
     <Compile Include="DAL\Entities\Room.cs" />
+    <Compile Include="DAL\Entities\StockOperation.cs" />
     <Compile Include="DAL\Migrations\201812300024595_InitialMigration.cs" />
     <Compile Include="DAL\Migrations\201812300024595_InitialMigration.Designer.cs">
       <DependentUpon>201812300024595_InitialMigration.cs</DependentUpon>
@@ -176,6 +178,10 @@
     <Compile Include="DAL\Migrations\201812301417423_AddAccessories.cs" />
     <Compile Include="DAL\Migrations\201812301417423_AddAccessories.Designer.cs">
       <DependentUpon>201812301417423_AddAccessories.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\Migrations\201901012300587_AddStockOperations.cs" />
+    <Compile Include="DAL\Migrations\201901012300587_AddStockOperations.Designer.cs">
+      <DependentUpon>201901012300587_AddStockOperations.cs</DependentUpon>
     </Compile>
     <Compile Include="DAL\Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -196,6 +202,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DAL\Migrations\201812301417423_AddAccessories.resx">
       <DependentUpon>201812301417423_AddAccessories.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DAL\Migrations\201901012300587_AddStockOperations.resx">
+      <DependentUpon>201901012300587_AddStockOperations.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

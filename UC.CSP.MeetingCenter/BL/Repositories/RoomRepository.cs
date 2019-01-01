@@ -20,23 +20,5 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
 
             return entity;
         }
-
-        public override void Create(Room entity)
-        {
-            VerifyConstraints(entity);
-            
-            Context.Rooms.Add(entity);
-        }
-
-        public override void Delete(Room entity)
-        {
-            Context.Rooms.Remove(entity);
-        }
-
-        private void VerifyConstraints(Room entity)
-        {
-            if (entity == null) throw new ArgumentNullException(nameof(entity));
-        }
-        
     }
 }

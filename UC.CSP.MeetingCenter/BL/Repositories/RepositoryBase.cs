@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Linq;
 using UC.CSP.MeetingCenter.DAL;
 using UC.CSP.MeetingCenter.DAL.Entities;
 
@@ -8,8 +9,15 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
     {
         protected AppDbContext Context => AppUnitOfWorkProvider.Instance.GetCurrent().Context;
 
-        public abstract TEntity GetById(int id);
-        public abstract void Create(TEntity entity);
+        public virtual TEntity GetById(int id)
+        {
+            return Context.Set<TEntity>().FirstOrDefault(r => r.Id == id);
+        }
+
+        public virtual void Create(TEntity entity)
+        {
+            Context.Set<TEntity>().Add(entity);
+        }
 
         public virtual void Update(TEntity entity)
         {
@@ -21,6 +29,10 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
 
             Context.Entry(e).CurrentValues.SetValues(entity);
         }
-        public abstract void Delete(TEntity entity);
+
+        public virtual void Delete(TEntity entity)
+        {
+            Context.Set<TEntity>().Remove(entity);
+        }
     }
 }

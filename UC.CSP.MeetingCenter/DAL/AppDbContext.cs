@@ -16,6 +16,7 @@ namespace UC.CSP.MeetingCenter.DAL
         public virtual DbSet<Reservation> Reservations { get; set; }
         public virtual DbSet<Accessory> Accessories { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<StockOperation> StockOperations { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
