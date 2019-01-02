@@ -1,17 +1,27 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using UC.CSP.MeetingCenter.DAL;
 using UC.CSP.MeetingCenter.DAL.Entities;
 
 namespace UC.CSP.MeetingCenter.BL.Repositories
 {
-    public abstract class RepositoryBase<TEntity> : IRepository<TEntity> where TEntity : class, IEntity, new()
+    public class RepositoryBase<TEntity> : IRepository<TEntity> where TEntity : class, IEntity, new()
     {
         protected AppDbContext Context => AppUnitOfWorkProvider.Instance.GetCurrent().Context;
 
         public virtual TEntity GetById(int id)
         {
-            return Context.Set<TEntity>().FirstOrDefault(r => r.Id == id);
+            var entity = Context.Set<TEntity>().FirstOrDefault(r => r.Id == id);
+            if (entity is ISoftDeletable softDeletableEntity)
+            {
+                if (softDeletableEntity.DeletedDate != null)
+                {
+                    return null;
+                }
+            }
+
+            return entity;
         }
 
         public virtual void Create(TEntity entity)
@@ -32,7 +42,15 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
 
         public virtual void Delete(TEntity entity)
         {
-            Context.Set<TEntity>().Remove(entity);
+            if (entity is ISoftDeletable softDeletableEntity)
+            {
+                softDeletableEntity.DeletedDate = DateTime.UtcNow;
+                Update(softDeletableEntity as TEntity);
+            }
+            else
+            {
+                Context.Set<TEntity>().Remove(entity);
+            }
         }
     }
 }

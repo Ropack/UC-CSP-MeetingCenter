@@ -17,7 +17,7 @@ namespace UC.CSP.MeetingCenter.BL.Facades
 
         public void Save()
         {
-            StorageProvider.Save();
+            //StorageProvider.Save();
         }
 
         public bool HasDataChanged()

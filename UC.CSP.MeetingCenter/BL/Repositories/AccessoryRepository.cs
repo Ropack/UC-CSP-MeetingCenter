@@ -6,6 +6,5 @@ namespace UC.CSP.MeetingCenter.BL.Repositories
 {
     public class AccessoryRepository : RepositoryBase<Accessory>
     {
-
     }
 }

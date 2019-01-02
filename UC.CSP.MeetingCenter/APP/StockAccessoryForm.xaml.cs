@@ -29,22 +29,19 @@ namespace UC.CSP.MeetingCenter.APP
         {
             InitializeComponent();
             AccessoryFacade = new AccessoryFacade();
-            SetTitle(mode);
-            InitForm();
+            InitForm(mode);
             Mode = mode;
         }
 
-        private void InitForm()
+        private void InitForm(StockFormMode mode)
         {
             var categories = AccessoryFacade.GetCategories();
             CategoryComboBox.ItemsSource = categories;
-        }
-
-        private void SetTitle(StockFormMode mode)
-        {
             if (mode == StockFormMode.In)
             {
                 TitleTextBlock.Text = "Accept delivery of Accessory";
+                CustomerNameTextBox.Visibility = Visibility.Collapsed;
+                CustomerNameLabel.Visibility = Visibility.Collapsed;
             }
             else if (mode == StockFormMode.Out)
             {
@@ -55,11 +52,13 @@ namespace UC.CSP.MeetingCenter.APP
                 throw new ArgumentException("Unsupported form mode");
             }
         }
+
         public AccessoryStockDTO RetrieveFormData()
         {
             var accessoryStock = new AccessoryStockDTO();
             var validationErrors = new List<ValidationError>();
             accessoryStock.Mode = Mode;
+            accessoryStock.CustomerName = CustomerNameTextBox.Text;
 
             if (int.TryParse(CountTextBox.Text, out var count))
             {

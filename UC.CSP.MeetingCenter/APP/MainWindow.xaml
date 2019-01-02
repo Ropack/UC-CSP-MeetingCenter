@@ -102,14 +102,21 @@
                                     <GridViewColumn Header="Min." Width="150" DisplayMemberBinding="{Binding RecommendedMinCount}"/>
                                 </GridView>
                             </ListView.View>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding LowOnStock}" Value="True">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListView.ItemContainerStyle>
                         </ListView>
                         <Button x:Name="NewAccessoryButton" Content="New" HorizontalAlignment="Left" Margin="1208,38,0,0" VerticalAlignment="Top" Width="75" Click="NewAccessoryButton_Click"/>
                         <Button x:Name="EditAccessoryButton" Content="Edit" HorizontalAlignment="Left" Margin="1208,95,0,0" VerticalAlignment="Top" Width="75" Click="EditAccessoryButton_Click"/>
                         <Button x:Name="DeleteAccessoryButton" Content="Delete" HorizontalAlignment="Left" Margin="1208,169,0,0" VerticalAlignment="Top" Width="75" Click="DeleteAccessoryButton_Click"/>
                         <Button x:Name="HandOverAccessoryButton" Content="Hand over" HorizontalAlignment="Left" Margin="30,600,0,0" VerticalAlignment="Top" Width="100" Click="HandOverAccessoryButton_Click"/>
                         <Button x:Name="AcceptDeliveryAccessoryButton" Content="Accept delivery" HorizontalAlignment="Left" Margin="30,640,0,0" VerticalAlignment="Top" Width="100" Click="AcceptDeliveryAccessoryButton_Click"/>
-
-                        <TextBlock Height="100" TextWrapping="Wrap" Text="{Binding Path=Test}" Width="100" Margin="1136,292,116,299"/>
                     </Grid>
                 </TabItem>
             </TabControl>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace UC.CSP.MeetingCenter.DAL.Entities
@@ -11,5 +12,8 @@ namespace UC.CSP.MeetingCenter.DAL.Entities
         [ForeignKey(nameof(AccessoryId))]
         public Accessory Accessory { get; set; }
         public int AccessoryId { get; set; }
+        [Required]
+        [StringLength(100, MinimumLength = 2)]
+        public string CustomerName { get; set; }
     }
 }

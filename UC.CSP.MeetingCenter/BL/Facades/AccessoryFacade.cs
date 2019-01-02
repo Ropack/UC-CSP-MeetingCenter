@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using AutoMapper;
 using UC.CSP.MeetingCenter.BL.DTO;
@@ -11,9 +12,11 @@ namespace UC.CSP.MeetingCenter.BL.Facades
     public class AccessoryFacade : FacadeBase
     {
         private AccessoryRepository AccessoryRepository { get; }
+        private IRepository<StockOperation> StockOperationRepository { get; }
         public AccessoryFacade()
         {
             AccessoryRepository = new AccessoryRepository();
+            StockOperationRepository = new RepositoryBase<StockOperation>();
         }
         public AccessoryDTO GetById(int id)
         {
@@ -91,6 +94,13 @@ namespace UC.CSP.MeetingCenter.BL.Facades
                 accessory.Accessory.StoredCount -= accessory.Count;
                 var entity = Mapper.Map<Accessory>(accessory.Accessory);
                 AccessoryRepository.Update(entity);
+                //StockOperationRepository.Create(new StockOperation()
+                //{
+                //    AccessoryId = entity.Id,
+                //    Count = accessory.Count,
+                //    DateTime = DateTime.UtcNow
+                //});
+                StockOperationRepository.Create(Mapper.Map<StockOperation>(accessory));
                 uow.Commit();
             }
         }

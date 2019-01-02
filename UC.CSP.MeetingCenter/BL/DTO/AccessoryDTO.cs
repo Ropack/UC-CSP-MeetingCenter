@@ -14,6 +14,7 @@ namespace UC.CSP.MeetingCenter.BL.DTO
         public string Name { get; set; }
         public int StoredCount { get; set; }
         public int RecommendedMinCount { get; set; }
+        public bool LowOnStock => StoredCount < RecommendedMinCount;
         public void Validate()
         {
             var validationErrors = new List<ValidationError>();

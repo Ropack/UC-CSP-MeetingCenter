@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Windows;
-using UC.CSP.MeetingCenter.APP.ViewModels;
+using System.Windows.Controls;
 using UC.CSP.MeetingCenter.BL.DTO;
 using UC.CSP.MeetingCenter.BL.Facades;
 using UC.CSP.MeetingCenter.BL.Services;
@@ -21,11 +21,8 @@ namespace UC.CSP.MeetingCenter.APP
         private ReservationFacade ReservationFacade { get; }
         private ApplicationFacade ApplicationFacade { get; }
         private AccessoryFacade AccessoryFacade { get; }
-        private MainViewModel MainViewModel { get; }
         public MainWindow()
         {
-            MainViewModel = new MainViewModel();
-            DataContext = MainViewModel;
             InitializeComponent();
             CenterFacade = new CenterFacade();
             RoomFacade = new RoomFacade();
@@ -360,7 +357,7 @@ namespace UC.CSP.MeetingCenter.APP
                     {
                         AccessoryFacade.Delete(selectedAccessory);
                         RefreshAccessoriesTab();
-                    });
+                    }, "Accessory successfully deleted.");
                 }
             }
         }

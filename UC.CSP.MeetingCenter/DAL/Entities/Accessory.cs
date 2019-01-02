@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace UC.CSP.MeetingCenter.DAL.Entities
 {
-    public class Accessory : IEntity
+    public class Accessory : IEntity, ISoftDeletable
     {
         public int Id { get; set; }
         [ForeignKey(nameof(CategoryId))]

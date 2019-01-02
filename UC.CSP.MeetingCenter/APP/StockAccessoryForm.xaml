@@ -5,17 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UC.CSP.MeetingCenter.APP"
         mc:Ignorable="d"
-        Title="StockAccessoryForm" Height="350" Width="600">
+        Title="StockAccessoryForm" Height="360" Width="600">
     <Grid>
         <TextBlock x:Name="TitleTextBlock" Text="" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="20"/>
         <Label Content="Category" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="CategoryComboBox" DisplayMemberPath="Name" SelectedValuePath="Id" HorizontalAlignment="Left" Margin="10,85,0,0" VerticalAlignment="Top" Width="196" SelectionChanged="CategoryComboBox_SelectionChanged"/>
-        <Label Content="Accessory" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="AccessoryComboBox" DisplayMemberPath="Name" HorizontalAlignment="Left" Margin="10,151,0,0" VerticalAlignment="Top" Width="196"/>
-        <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Left" Margin="228,290,0,0" VerticalAlignment="Top" Width="75" Click="SaveButton_Click"/>
+        <Label Content="Accessory" HorizontalAlignment="Left" Margin="10,112,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="AccessoryComboBox" DisplayMemberPath="Name" HorizontalAlignment="Left" Margin="10,138,0,0" VerticalAlignment="Top" Width="196"/>
+        <Button x:Name="SaveButton" Content="Ok" HorizontalAlignment="Left" Margin="221,289,0,0" VerticalAlignment="Top" Width="75" Click="SaveButton_Click"/>
         <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="328,290,0,0" VerticalAlignment="Top" Width="75" Click="CancelButton_Click"/>
-        <Label Content="Count" HorizontalAlignment="Left" Margin="10,178,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="CountTextBox" HorizontalAlignment="Left" Height="23" Margin="10,204,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Count" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="CountTextBox" HorizontalAlignment="Left" Height="23" Margin="10,191,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="0"/>
+        <Label x:Name="CustomerNameLabel" Content="Customer Name" HorizontalAlignment="Left" Margin="10,219,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="CustomerNameTextBox" HorizontalAlignment="Left" Height="23" Margin="10,245,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
 
     </Grid>
 </Window>

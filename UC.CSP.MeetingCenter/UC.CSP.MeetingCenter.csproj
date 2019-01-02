@@ -78,7 +78,6 @@
       <DependentUpon>StockAccessoryForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="APP\StockFormMode.cs" />
-    <Compile Include="APP\ViewModels\MainViewModel.cs" />
     <Compile Include="APP\WindowExtensions.cs" />
     <Compile Include="BL\AutoMapperConfiguration.cs" />
     <Compile Include="BL\DTO\AccessoryDTO.cs" />
@@ -96,7 +95,6 @@
     <Compile Include="BL\Queries\ReservationsQuery.cs" />
     <Compile Include="BL\Repositories\AccessoryRepository.cs" />
     <Compile Include="BL\Repositories\ReservationRepository.cs" />
-    <Compile Include="BL\Repositories\StockOperationRepository.cs" />
     <Compile Include="BL\Services\IStorageProvider.cs" />
     <Compile Include="BL\Services\JsonExportService.cs" />
     <Compile Include="BL\Services\XmlFileStorageProvider.cs" />
@@ -108,6 +106,7 @@
     <Compile Include="DAL\AppUnitOfWorkProvider.cs" />
     <Compile Include="DAL\Entities\Accessory.cs" />
     <Compile Include="DAL\Entities\Category.cs" />
+    <Compile Include="DAL\Entities\ISoftDeletable.cs" />
     <Compile Include="DAL\Entities\IValidatable.cs" />
     <Compile Include="DAL\Entities\Reservation.cs" />
     <Compile Include="APP\FormMode.cs" />
@@ -183,6 +182,10 @@
     <Compile Include="DAL\Migrations\201901012300587_AddStockOperations.Designer.cs">
       <DependentUpon>201901012300587_AddStockOperations.cs</DependentUpon>
     </Compile>
+    <Compile Include="DAL\Migrations\201901020027460_AddCustomerToStockOperation.cs" />
+    <Compile Include="DAL\Migrations\201901020027460_AddCustomerToStockOperation.Designer.cs">
+      <DependentUpon>201901020027460_AddCustomerToStockOperation.cs</DependentUpon>
+    </Compile>
     <Compile Include="DAL\Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -205,6 +208,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DAL\Migrations\201901012300587_AddStockOperations.resx">
       <DependentUpon>201901012300587_AddStockOperations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DAL\Migrations\201901020027460_AddCustomerToStockOperation.resx">
+      <DependentUpon>201901020027460_AddCustomerToStockOperation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
